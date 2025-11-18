@@ -48,9 +48,9 @@ AudioTrack::AudioTrack(const AudioTrack& other):
     std::cout << "AudioTrack copy constructor called for: " << other.title << std::endl;
     #endif
     // Your code here...
-    if(other.waveform_data!=nullptr){
+    if(other.waveform_size>0){
         waveform_data=new double[other.waveform_size];
-        for(int i=0;i<waveform_size;i++){
+        for(size_t i=0;i<waveform_size;i++){
             waveform_data[i]=other.waveform_data[i];
         }
     }else{
@@ -74,9 +74,9 @@ AudioTrack& AudioTrack::operator=(const AudioTrack& other) {
     duration_seconds=other.duration_seconds;
     bpm=other.bpm; 
     waveform_size=other.waveform_size;
-    if(other.waveform_data!=nullptr){
+    if(other.waveform_size>0){
         waveform_data=new double[other.waveform_size];
-        for(int i=0;i<waveform_size;i++){
+        for(size_t i=0;i<waveform_size;i++){
             waveform_data[i]=other.waveform_data[i];
         }
     }else{
@@ -86,8 +86,8 @@ AudioTrack& AudioTrack::operator=(const AudioTrack& other) {
 }
 
 AudioTrack::AudioTrack(AudioTrack&& other) noexcept:
-    title(other.title),
-    artists(other.artists),
+    title(std::move(other.title)),
+    artists(std::move(other.artists)),
     duration_seconds(other.duration_seconds),
     bpm(other.bpm), 
     waveform_size(other.waveform_size),
@@ -97,9 +97,10 @@ AudioTrack::AudioTrack(AudioTrack&& other) noexcept:
     std::cout << "AudioTrack move constructor called for: " << other.title << std::endl;
     #endif
     // Your code here...
-    other.waveform_data=nullptr;
+    other.duration_seconds=0;
+    other.bpm=0;
     other.waveform_size=0;
-
+    other.waveform_data=nullptr;
 }
 
 AudioTrack& AudioTrack::operator=(AudioTrack&& other) noexcept {
@@ -111,14 +112,22 @@ AudioTrack& AudioTrack::operator=(AudioTrack&& other) noexcept {
     #endif
     // Your code here...
       if(this==&other) return *this;
+
     delete [] waveform_data;
     waveform_data=nullptr;
-    title=other.title;
-    artists=other.artists;
+    
+    title=std::move(other.title);
+    artists=std::move(other.artists);
     duration_seconds=other.duration_seconds;
     bpm=other.bpm; 
     waveform_size=other.waveform_size;
     waveform_data=other.waveform_data;
+
+    other.waveform_data=nullptr;
+    other.waveform_size = 0;
+    other.duration_seconds=0;
+    other.bpm=0;
+
     return *this;
 }
 
