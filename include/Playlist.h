@@ -4,7 +4,8 @@
 #include "AudioTrack.h"
 #include <string>
 #include <vector>
-//hi yael
+
+
 /**
  * ⚠️  WARNING: THIS CLASS HAS INTENTIONAL MEMORY LEAKS! ⚠️
  * 
@@ -20,7 +21,15 @@ struct PlaylistNode {
     PlaylistNode* next;
 
     PlaylistNode(AudioTrack* t) : track(t), next(nullptr) {}
-    ~PlaylistNode() = default;
+    ~PlaylistNode(){
+        #ifdef DEBUG
+    std::cout << "PlaylistNode destructor deleting track: " 
+              << (track ? track->get_title() : "null") << std::endl;
+    #endif
+        delete track;
+        track=nullptr;
+    };
+
 };
 
 class Playlist {

@@ -13,11 +13,13 @@ Playlist::~Playlist() {
     std::cout << "Destroying playlist: " << playlist_name << std::endl;
     #endif
     PlaylistNode* curr=head;
-    while(curr!=nullptr){
+    while(curr){
         PlaylistNode* next=(*curr).next;
         delete(curr);
         curr=next;
+
     }
+    head=nullptr;
 
 }
 
@@ -51,15 +53,13 @@ void Playlist::remove_track(const std::string& title) {
 
     if (current) {
         // Remove from linked list
-        PlaylistNode* next=current-> next;
-        delete current ;
 
         if (prev) {
-            prev->next = next;
+            prev->next = current-> next;
         } else {
-            head = next;
+            head = current-> next ;
         }
-        
+        delete current;
         track_count--;
         std::cout << "Removed '" << title << "' from playlist" << std::endl;
 
