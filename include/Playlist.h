@@ -48,6 +48,15 @@ public:
      * Destructor
      */
     ~Playlist();
+    /**
+     * Copy Constructor
+     */
+    Playlist(const Playlist& other);
+    /**
+     * Operator
+     */
+    Playlist& operator=(const Playlist& other);
+    
 
     /**
      * Add a track to the playlist

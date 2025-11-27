@@ -15,7 +15,7 @@ class DJLibraryService {
 public:
     DJLibraryService(const Playlist& playlist);
     DJLibraryService() = default;
-
+    ~DJLibraryService();
     /**
      * @brief Build the track library from parsed config data
      * @param library_tracks Vector of track info from config
@@ -34,6 +34,7 @@ public:
 
     // Display all playlists in the library (debug aid; optional for Phase 4)
     void displayLibrary() const;
+
 
     /**
      * @brief Find a track in the library by its title.

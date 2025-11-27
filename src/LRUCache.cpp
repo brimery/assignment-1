@@ -18,7 +18,22 @@ AudioTrack* LRUCache::get(const std::string& track_id) {
  * TODO: Implement the put() method for LRUCache
  */
 bool LRUCache::put(PointerWrapper<AudioTrack> track) {
-    return false; // Placeholder
+    if(!track){
+        return false;
+    }
+    size_t alredy_exict=findSlot(track->get_title());
+    if(alredy_exict!=max_size){
+        slots[alredy_exict].access(++access_counter);
+        return false;
+    }
+    bool evicted=false;
+    if(size()==max_size){
+        evicted=evictLRU();
+    }
+    size_t empty_slot=findEmptySlot();
+    slots[empty_slot].store(std::move(track),++access_counter);
+    
+    return evicted; // Placeholder
 }
 
 bool LRUCache::evictLRU() {
@@ -64,7 +79,18 @@ size_t LRUCache::findSlot(const std::string& track_id) const {
  * TODO: Implement the findLRUSlot() method for LRUCache
  */
 size_t LRUCache::findLRUSlot() const {
-    return 0; // Placeholder
+    uint64_t current_min=UINT64_MAX;
+    size_t index=max_size;
+    for (size_t i=0;i<max_size;i++){
+        if (slots[i].isOccupied()){
+            if(slots[i].getLastAccessTime()<current_min){
+                index=i;
+                current_min=slots[i].getLastAccessTime();
+            }
+        }
+    }
+
+    return index; // Placeholder
 }
 
 size_t LRUCache::findEmptySlot() const {
