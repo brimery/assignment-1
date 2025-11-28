@@ -1,0 +1,38 @@
+
+============= RUNNING INTERACTIVE SOFTWARE =============
+Created playlist: 
+[MixingEngineService] Initialized with 2 empty decks.
+DJ Session System initialized: Interactive Session
+=== DJ Controller System ===
+Starting interactive DJ session...
+Loading configuration from: bin/dj_config.txt
+Parsed config file: 3 tracks found, 3 playlists found
+Configuration loaded successfully.
+BPM Tolerance: 10 BPM
+Auto Sync: enabled
+Cache Size: 3 slots
+TODO: Implement DJLibraryService::buildLibrary method
+3 tracks to be loaded into library.
+MP3Track created: 192 kbps
+MP3Track created: 192kbps
+WAVTrack created: 96000Hz/24bit
+ WAVTrack created: 96000Hz/24bit
+MP3Track created: 320 kbps
+MP3Track created: 320kbps
+[INFO] Track library built: 3tracks loaded
+
+Starting DJ performance simulation...
+BPM Tolerance: 10 BPM
+Auto Sync: enabled
+Cache Capacity: 3 slots (LRU policy)
+
+--- Processing Tracks ---
+TODO: Implement the DJ performance simulation workflow here.
+
+=== Available Playlists ===
+1. progressive_house
+2. test_playlist
+3. trance_classics
+0. Cancel
+
+Select a playlist (1-3, 0 to cancel): 
