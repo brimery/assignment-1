@@ -8,7 +8,7 @@
 
 
 DJLibraryService::DJLibraryService(const Playlist& playlist) 
-    : playlist(playlist) {}
+    : playlist(playlist), library() {}
 /**
  * @brief Load a playlist from track indices referencing the library
  * @param library_tracks Vector of track info from config
@@ -19,11 +19,12 @@ DJLibraryService::~DJLibraryService(){
     }
 }
 void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>& library_tracks) {
-    std::cout << "TODO: Implement DJLibraryService::buildLibrary method\n"<< library_tracks.size() << " tracks to be loaded into library.\n";
-    for(const auto& t: library_tracks ){
-        if(t.type=="MP3"){
-            bool has_tags=(t.extra_param2!=0);
-            MP3Track* mp=new MP3Track(
+    library.clear();
+
+    for (const auto& t : library_tracks) {
+        if (t.type == "MP3") {
+            bool has_tags = (t.extra_param2 != 0);
+            MP3Track* mp = new MP3Track(
                 t.title,
                 t.artists,
                 t.duration_seconds,
@@ -32,27 +33,25 @@ void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>&
                 has_tags
             );
             library.push_back(mp);
-            std::cout << "MP3Track created: " << mp->get_bitrate() << "kbps\n";
-        }else if(t.type=="WAV"){
-            WAVTrack* wav=new WAVTrack(
+            //std::cout << "MP3Track created: " << mp->get_bitrate() << " kbps\n";
+        }
+        else if (t.type == "WAV") {
+            WAVTrack* wav = new WAVTrack(
                 t.title,
                 t.artists,
                 t.duration_seconds,
                 t.bpm,
                 t.extra_param1,
                 t.extra_param2
-
             );
             library.push_back(wav);
-            std::cout <<" WAVTrack created: "<< wav->get_sample_rate() << "Hz/" << wav->get_bit_depth() << "bit" <<std::endl;
-
+            //std::cout << "WAVTrack created: "<< wav->get_sample_rate() << "Hz/" << wav->get_bit_depth() << "bit\n";
         }
-
     }
 
-    //Todo: Implement buildLibrary method
-    std::cout << "[INFO] Track library built: "<< library.size() <<  "tracks loaded" << std::endl;
+    std::cout << "[INFO] Track library built: "<< library.size() << " tracks loaded\n";
 }
+
 
 /**
  * @brief Display the current state of the DJ library playlist
@@ -98,7 +97,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
     // Your implementation here
     std:: cout<< "[INFO] Loading playlist: " << playlist_name << std::endl;
     playlist=Playlist(playlist_name);
-    for(int index :track_indices){
+    for(size_t index :track_indices){
         if(index<=0 || index > library.size()){
             std::cout << "[WARNING] Invalid track index: " << index << std::endl;
         }else{
@@ -111,11 +110,14 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
             raw->load();
             raw->analyze_beatgrid();
             playlist.add_track(raw);
-            std::cout << "Added '" << raw->get_title() << "' to playlist '" << playlist_name << "'" << std::endl;
         }
 
     }
-    std::cout << "[INFO] Playlist loaded: " << playlist.get_track_count() << " tracks" << std::endl;
+    std::cout << "[INFO] Playlist loaded: " 
+          << playlist.get_name()
+          << " (" << playlist.get_track_count() << " tracks)" 
+          << std::endl;
+
 
 }
 /**
@@ -124,11 +126,11 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
  */
 std::vector<std::string> DJLibraryService::getTrackTitles() const {
     std::vector<std::string> titles;
-    for(AudioTrack*  track: playlist.getTracks()){
-        if(track){
-            titles.push_back(track->get_title());
+    for (AudioTrack* track : playlist.getTracks()) {
+        if (track) {
+            titles.insert(titles.begin(), track->get_title());
         }
-    } 
+    }
     // Your implementation here
     return titles; // Placeholder
 }

@@ -21,14 +21,10 @@ struct PlaylistNode {
     PlaylistNode* next;
 
     PlaylistNode(AudioTrack* t) : track(t), next(nullptr) {}
-    ~PlaylistNode(){
-        #ifdef DEBUG
-    std::cout << "PlaylistNode destructor deleting track: " 
-              << (track ? track->get_title() : "null") << std::endl;
-    #endif
-        delete track;
-        track=nullptr;
-    };
+    ~PlaylistNode()=default;
+    PlaylistNode(const PlaylistNode&) = delete;
+    PlaylistNode& operator=(const PlaylistNode&) = delete;
+    
 
 };
 

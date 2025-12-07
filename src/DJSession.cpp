@@ -9,7 +9,16 @@
 
 
 DJSession::DJSession(const std::string& name, bool play_all)
-    : session_name(name), play_all(play_all) {
+    : session_name(name),
+    library_service(),
+    controller_service(),
+    mixing_service(),
+    config_manager(),
+    session_config(),
+    track_titles(),
+    play_all(play_all),
+    stats()
+      {
     std::cout << "DJ Session System initialized: " << session_name << std::endl;
 }
 
@@ -70,7 +79,8 @@ int DJSession::load_track_to_controller(const std::string& track_name) {
         stats.errors=stats.errors+1;
         return 0;
     }
-    std::cout << "[System] Loading track ’" << track_name << "’ to controller..." << std::endl;
+    std::cout << "[System] Loading track '" << track_name << "' to controller..." << std::endl;
+
     int t=controller_service.loadTrackToCache(*track);
     if(t==1){
         stats.cache_hits=stats.cache_hits+1;
@@ -147,7 +157,7 @@ void DJSession::simulate_dj_performance() {
     std::cout << "Cache Capacity: " << session_config.controller_cache_size << " slots (LRU policy)" << std::endl;
     std::cout << "\n--- Processing Tracks ---" << std::endl;
 
-    std::cout << "TODO: Implement the DJ performance simulation workflow here." << std::endl;
+
     // Your implementation here
     if(play_all){
         std::vector<std::string> names;
@@ -162,7 +172,7 @@ void DJSession::simulate_dj_performance() {
                 stats.errors++;
                 continue;
             }
-            for(const std::string title: track_titles ){
+            for(const std::string& title: track_titles ){
                 std::cout << "\n–- Processing: " << title << " –-" << std::endl;
                 stats.tracks_processed++;
                 load_track_to_controller(title);
@@ -170,11 +180,10 @@ void DJSession::simulate_dj_performance() {
                 if(!deck_ok){
                     continue;
                 }
-                
-            }
+                controller_service.displayCacheStatus();
+                mixing_service.displayDeckStatus();
 
-            print_session_summary();
-            stats=SessionStats();
+            }
             
         }
         std::cout << "\nSession cancelled by user or all playlists played." << std::endl;
@@ -191,7 +200,7 @@ void DJSession::simulate_dj_performance() {
                 stats.errors++;
                 continue;
             }
-            for(const std::string title: track_titles ){
+            for(const std::string& title: track_titles ){
                 std::cout << "\n–- Processing: " << title << " –-" << std::endl;
                 stats.tracks_processed++;
                 load_track_to_controller(title);
@@ -199,11 +208,13 @@ void DJSession::simulate_dj_performance() {
                 if(!deck_ok){
                     continue;
                 }
-
+                controller_service.displayCacheStatus();
+                mixing_service.displayDeckStatus(); 
             }
             std::cout << "\nSession cancelled by user or all playlists played." << std::endl;
         }
     }
+    print_session_summary();
     
 }
 

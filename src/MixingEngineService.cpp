@@ -7,7 +7,7 @@
  * TODO: Implement MixingEngineService constructor
  */
 MixingEngineService::MixingEngineService()
-    : active_deck(0), auto_sync(false), bpm_tolerance(0)
+    : decks(), active_deck(1), auto_sync(false), bpm_tolerance(0)
 {
     decks[0]=nullptr;
     decks[1]=nullptr;
@@ -44,8 +44,8 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     if(decks[0]==nullptr && decks[1]==nullptr){
         target=0;
     }
-    if(target!=active_deck){
-        std::cout<< "[Deck Switch] Target deck: "<< target <<"\n";
+    if(static_cast<size_t>(target)!=active_deck){
+        std::cout << "[Deck Switch] Target deck: " << target << "\n";
     }
     if(decks[target]){
         delete decks[target];
@@ -61,7 +61,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     AudioTrack* p=to_load.release();
     decks[target]=p;
     std::cout << "[Load Complete] '" << track.get_title() << "' is now loaded on deck " << target << "\n";
-    if(target!=active_deck && decks[active_deck]){
+    if(static_cast<size_t>(target) != active_deck && decks[active_deck]) {
         std::cout << "[Unload] Unloading previous deck " <<active_deck<< " ("<< decks[active_deck]->get_title()<<")\n";
         delete decks[active_deck];
         decks[active_deck]=nullptr;
@@ -122,7 +122,7 @@ void MixingEngineService::sync_bpm(const PointerWrapper<AudioTrack>& track) cons
         int bpm2=decks[active_deck]->get_bpm();
         int average=(bpm1+bpm2)/2;
         track->set_bpm(average);
-        std::cout<<"[Sync BPM] Syncing BPM from "<<bpm1<<" to " <<average<< "\n";
+        std::cout << "[Sync BPM] Syncing BPM from " << bpm1 << " to " << average << "\n";
     }
     // Your implementation here
 }
