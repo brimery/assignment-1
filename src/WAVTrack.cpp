@@ -29,7 +29,7 @@ void WAVTrack::analyze_beatgrid() {
     // 2. Calculate beats: (duration_seconds / 60.0) * bpm
     // 3. Print number of beats and mention uncompressed precision
     // should print "  → Estimated beats: <beats>  → Precision factor: 1.0 (uncompressed audio)"
-    double beats_estimated = (duration_seconds / 60.0) * bpm;
+    int beats_estimated = (duration_seconds / 60.0) * bpm;
     int precision_factor = 1;
     std::cout << "  → Estimated beats: " << beats_estimated
           << "  → Precision factor: " << precision_factor

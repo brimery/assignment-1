@@ -173,20 +173,23 @@ void DJSession::simulate_dj_performance() {
                 continue;
             }
             for(const std::string& title: track_titles ){
-                std::cout << "\n–- Processing: " << title << " –-" << std::endl;
+                std::cout << "\n--- Processing: " << title << " ---" << std::endl;
                 stats.tracks_processed++;
                 load_track_to_controller(title);
+                controller_service.displayCacheStatus();
                 bool deck_ok= load_track_to_mixer_deck(title);
                 if(!deck_ok){
                     continue;
                 }
-                controller_service.displayCacheStatus();
                 mixing_service.displayDeckStatus();
+                
 
             }
+            print_session_summary(); 
             
         }
-        std::cout << "\nSession cancelled by user or all playlists played." << std::endl;
+       
+        
     }
     else{
         while(true){
@@ -210,11 +213,17 @@ void DJSession::simulate_dj_performance() {
                 }
                 controller_service.displayCacheStatus();
                 mixing_service.displayDeckStatus(); 
+                
+                
             }
-            std::cout << "\nSession cancelled by user or all playlists played." << std::endl;
+            
+            print_session_summary();
         }
+        
     }
-    print_session_summary();
+    
+    
+    std::cout << "\nSession cancelled by user or all playlists played." << std::endl;
     
 }
 
