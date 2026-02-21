@@ -1,0 +1,12 @@
+﻿.vscode/
+.idea/
+*.iml
+bin/
+*.o
+*.out
+*.exe
+*.log
+interactive_output.txt
+test_output.txt
+.DS_Store
+Thumbs.db
